@@ -36,7 +36,7 @@ public class CrudUseCaseImpl implements CrudUseCase {
     }
 
     @Override
-    public void deleteSpacecrat(Long id) {
+    public void deleteSpacecrat(long id) {
         this.repository.delete(id);
     }
 

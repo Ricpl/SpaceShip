@@ -1,49 +1,45 @@
 package com.spacecrafts.spacecrafts.controller.dto;
 
-import jakarta.validation.constraints.NotBlank;
+
 
 public class PatchSpacecraftDTO {
-    @NotBlank
-    private Long id;
-    @NotBlank
+    private int id;
     private String name;
-    @NotBlank
     private String film;
-    @NotBlank
     private String description;
 
     public PatchSpacecraftDTO() {
     }
 
-    public @NotBlank Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(@NotBlank Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public @NotBlank String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public @NotBlank String getFilm() {
+    public String getFilm() {
         return film;
     }
 
-    public void setFilm(@NotBlank String film) {
+    public void setFilm(String film) {
         this.film = film;
     }
 
-    public @NotBlank String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotBlank String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 }

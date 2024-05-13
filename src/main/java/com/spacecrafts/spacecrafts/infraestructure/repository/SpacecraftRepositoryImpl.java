@@ -1,6 +1,8 @@
 package com.spacecrafts.spacecrafts.infraestructure.repository;
 
 import com.spacecrafts.spacecrafts.domain.Spacecraft;
+import com.spacecrafts.spacecrafts.domain.exception.repository.RepositoryErrorEnum;
+import com.spacecrafts.spacecrafts.domain.exception.repository.RespositoryException;
 import com.spacecrafts.spacecrafts.domain.repository.SpacecraftRepository;
 import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftDB;
 import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftsJpaRepository;
@@ -30,7 +32,7 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
     public Spacecraft findById(Long id) {
         Optional<SpacecraftDB> optional= this.repository.findById(id);
         if (!optional.isPresent()){
-            throw new RuntimeException();
+            throw new RespositoryException(RepositoryErrorEnum.NOT_FOUND_ID);
         }
         return this.mapper.fromDBtoDomain(optional.get());
     }
@@ -38,18 +40,16 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
     @Override
     public List<Spacecraft> findByName(String name) {
         List<SpacecraftDB> list= this.repository.findByNameIsContaining(name);
-        if (!list.isEmpty()){
-            return this.mapper.fromDBtoDomainList(list);
+        if (list.isEmpty()){
+            throw new RespositoryException(RepositoryErrorEnum.NOT_FOUND_NAME);
         }
-        throw new RuntimeException();
+        return this.mapper.fromDBtoDomainList(list);
+
     }
 
     @Override
     public Page<Spacecraft> findAll(Pageable pageable) {
         Page<SpacecraftDB> allSpaceCraftsDB = this.repository.findAll(pageable);
-        if (allSpaceCraftsDB.isEmpty()){
-            throw new RuntimeException();
-        }
         return allSpaceCraftsDB.map(spacecraftDB-> this.mapper.fromDBtoDomain(spacecraftDB));
     }
 
@@ -60,8 +60,8 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
 
     @Override
     public void delete(Long id) {
-        if (this.repository.findById(id).isPresent()){
-            throw new RuntimeException();
+        if (this.repository.findById(id).isEmpty()){
+            throw new RespositoryException(RepositoryErrorEnum.NOT_FOUND_ID);
         }
         Objects.requireNonNull(this.cacheManager.getCache("get-spacecraft-by-id")).clear();
         this.repository.deleteById(id);
@@ -69,10 +69,21 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
 
     @Override
     public void update(Spacecraft spacecraft) {
-        if (!this.repository.findById(spacecraft.getId()).isPresent()){
-            throw new RuntimeException();
+        Optional<SpacecraftDB> spacecraftToUpdate= this.repository.findById(spacecraft.getId());
+        if (spacecraftToUpdate.isEmpty()){
+            throw new RespositoryException(RepositoryErrorEnum.NOT_FOUND_ID);
+        }
+        if (spacecraft.getName()!=null && !spacecraft.getName().isBlank()){
+            spacecraftToUpdate.get().setName(spacecraft.getName());
+        }
+        if (spacecraft.getFilm()!=null && !spacecraft.getFilm().isBlank()){
+            spacecraftToUpdate.get().setFilm(spacecraft.getFilm());
+        }
+        if (spacecraft.getDescription()!=null && !spacecraft.getDescription().isBlank()){
+            spacecraftToUpdate.get().setDescription(spacecraft.getDescription());
         }
         Objects.requireNonNull(this.cacheManager.getCache("get-spacecraft-by-id")).clear();
-        this.repository.save(this.mapper.fromDomainToDB(spacecraft));
+        this.repository.save(spacecraftToUpdate.get());
+
     }
 }

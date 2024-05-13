@@ -1,19 +1,11 @@
 package com.spacecrafts.spacecrafts.controller.dto;
 
-import jakarta.validation.constraints.NotBlank;
 
-import java.io.Serializable;
-
-
-public class PostSpacecraftDto implements Serializable {
-    @NotBlank
+public class SpacecraftDto {
     private String name;
-    @NotBlank
     private String film;
-    @NotBlank
     private String description;
 
-    public PostSpacecraftDto(){}
     public String getName() {
         return name;
     }
@@ -36,5 +28,14 @@ public class PostSpacecraftDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public SpacecraftDto() {
+    }
+
+    public SpacecraftDto(String description, String film, String name) {
+        this.description = description;
+        this.film = film;
+        this.name = name;
     }
 }
