@@ -12,5 +12,6 @@ public interface CrudUseCase {
     List<Spacecraft> getSpacecraftByName(String name);
     void postSpacecraft(Spacecraft spacecraft);
     void deleteSpacecrat(Long id);
+    void patchSpacecraft(Spacecraft spacecraft);
 
 }

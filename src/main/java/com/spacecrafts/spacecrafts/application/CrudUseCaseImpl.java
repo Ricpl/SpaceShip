@@ -26,6 +26,11 @@ public class CrudUseCaseImpl implements CrudUseCase {
     }
 
     @Override
+    public List<Spacecraft> getSpacecraftByName(String name) {
+        return this.repository.findByName(name);
+    }
+
+    @Override
     public void postSpacecraft(Spacecraft spacecraft){
         this.repository.saveSpacecraft(spacecraft);
     }
@@ -35,8 +40,9 @@ public class CrudUseCaseImpl implements CrudUseCase {
         this.repository.delete(id);
     }
 
+
     @Override
-    public List<Spacecraft> getSpacecraftByName(String name) {
-        return this.repository.findByName(name);
+    public void patchSpacecraft(Spacecraft spacecraft) {
+        this.repository.update(spacecraft);
     }
 }

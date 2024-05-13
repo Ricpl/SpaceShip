@@ -6,11 +6,14 @@ import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftDB;
 import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftsJpaRepository;
 import com.spacecrafts.spacecrafts.infraestructure.mapper.SpacecraftDbMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -19,13 +22,17 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
     private SpacecraftsJpaRepository repository;
     @Autowired
     private SpacecraftDbMapper mapper;
+    @Autowired
+    CacheManager cacheManager;
 
     @Override
+    @Cacheable(value = "get-spacecraft-by-id")
     public Spacecraft findById(Long id) {
         Optional<SpacecraftDB> optional= this.repository.findById(id);
-        if (optional.isPresent()){
-            return this.mapper.fromDBtoDomain(optional.get());
-        }else {throw new RuntimeException() ;}
+        if (!optional.isPresent()){
+            throw new RuntimeException();
+        }
+        return this.mapper.fromDBtoDomain(optional.get());
     }
 
     @Override
@@ -41,7 +48,7 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
     public Page<Spacecraft> findAll(Pageable pageable) {
         Page<SpacecraftDB> allSpaceCraftsDB = this.repository.findAll(pageable);
         if (allSpaceCraftsDB.isEmpty()){
-            return null;
+            throw new RuntimeException();
         }
         return allSpaceCraftsDB.map(spacecraftDB-> this.mapper.fromDBtoDomain(spacecraftDB));
     }
@@ -54,9 +61,18 @@ public class SpacecraftRepositoryImpl implements SpacecraftRepository {
     @Override
     public void delete(Long id) {
         if (this.repository.findById(id).isPresent()){
-            this.repository.deleteById(id);
+            throw new RuntimeException();
         }
-        throw new RuntimeException();
+        Objects.requireNonNull(this.cacheManager.getCache("get-spacecraft-by-id")).clear();
+        this.repository.deleteById(id);
     }
 
+    @Override
+    public void update(Spacecraft spacecraft) {
+        if (!this.repository.findById(spacecraft.getId()).isPresent()){
+            throw new RuntimeException();
+        }
+        Objects.requireNonNull(this.cacheManager.getCache("get-spacecraft-by-id")).clear();
+        this.repository.save(this.mapper.fromDomainToDB(spacecraft));
+    }
 }

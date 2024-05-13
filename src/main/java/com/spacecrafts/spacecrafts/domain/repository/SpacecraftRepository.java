@@ -10,7 +10,8 @@ public interface SpacecraftRepository {
 
      Page<Spacecraft> findAll(Pageable pageable);
      Spacecraft findById(Long id);
+     List<Spacecraft> findByName(String name);
      void saveSpacecraft(Spacecraft spacecraft);
      void delete(Long id);
-     List<Spacecraft> findByName(String name);
+     void update(Spacecraft spacecraft);
 }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 
-public class SpacecraftDto implements Serializable {
+public class PostSpacecraftDto implements Serializable {
     @NotBlank
     private String name;
     @NotBlank
@@ -13,7 +13,7 @@ public class SpacecraftDto implements Serializable {
     @NotBlank
     private String description;
 
-    public SpacecraftDto(){}
+    public PostSpacecraftDto(){}
     public String getName() {
         return name;
     }

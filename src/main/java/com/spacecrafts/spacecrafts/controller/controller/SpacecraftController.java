@@ -1,7 +1,8 @@
 package com.spacecrafts.spacecrafts.controller.controller;
 
 import com.spacecrafts.spacecrafts.controller.api.SpacecraftApi;
-import com.spacecrafts.spacecrafts.controller.dto.SpacecraftDto;
+import com.spacecrafts.spacecrafts.controller.dto.PatchSpacecraftDTO;
+import com.spacecrafts.spacecrafts.controller.dto.PostSpacecraftDto;
 import com.spacecrafts.spacecrafts.controller.mapper.SpacecraftDtoMapper;
 import com.spacecrafts.spacecrafts.domain.application.CrudUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class SpacecraftController implements SpacecraftApi {
     SpacecraftDtoMapper mapper;
 
     @Override
-    public ResponseEntity<SpacecraftDto> getSpacecraftById(Long id) {
+    public ResponseEntity<PostSpacecraftDto> getSpacecraftById(Long id) {
         return new ResponseEntity<>(this.mapper.fromDomainToDto(this.getService.getSpacecraftById(id)), HttpStatus.OK);
     }
 
@@ -35,8 +36,13 @@ public class SpacecraftController implements SpacecraftApi {
     }
 
     @Override
-    public ResponseEntity<?> postSpacecraft(@RequestBody SpacecraftDto dto) {
-        this.getService.postSpacecraft(this.mapper.fromDtoToDomain(dto));
+    public ResponseEntity<List<PostSpacecraftDto>> getSpacecraftByName(String name) {
+        return new ResponseEntity<>(this.mapper.fromDomainToDtoList(this.getService.getSpacecraftByName(name)),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> postSpacecraft(@RequestBody PostSpacecraftDto dto) {
+        this.getService.postSpacecraft(this.mapper.fromDtoToDomainPost(dto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -47,7 +53,8 @@ public class SpacecraftController implements SpacecraftApi {
     }
 
     @Override
-    public ResponseEntity<List<SpacecraftDto>> getSpacecraftByName(String name) {
-        return new ResponseEntity<>(this.mapper.fromDomainToDtoList(this.getService.getSpacecraftByName(name)),HttpStatus.OK);
+    public ResponseEntity<?> upateSpacecraft(PatchSpacecraftDTO dto) {
+        this.getService.patchSpacecraft(this.mapper.fromDtoToDomainPatch(dto));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
