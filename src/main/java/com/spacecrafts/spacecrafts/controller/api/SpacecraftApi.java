@@ -50,8 +50,7 @@ public interface SpacecraftApi {
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/deleteSpacecraft/id/{id}",
-            produces = "application/json",
-            consumes = "application/json" )
+            produces = "application/json" )
     default ResponseEntity<?> deleteSpacecraft(@PathVariable int id){
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

@@ -21,47 +21,46 @@ import java.util.stream.Collectors;
 public class SpacecraftController implements SpacecraftApi {
 
     @Autowired
-    CrudUseCase getService;
+    CrudUseCase service;
 
     @Autowired
     SpacecraftDtoMapper mapper;
 
-    private final SpacecraftValidation validation = new SpacecraftValidation();
 
     @Override
     public ResponseEntity<SpacecraftDto> getSpacecraftById(int id) {
-        this.validation.validateId(id);
-        return new ResponseEntity<>(this.mapper.fromDomainToDto(this.getService.getSpacecraftById(id)), HttpStatus.OK);
+        SpacecraftValidation.validateId(id);
+        return new ResponseEntity<>(this.mapper.fromDomainToDto(this.service.getSpacecraftById(id)), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> getSpacecraft(Pageable pageable) {
-        return new ResponseEntity<>(this.getService.getAllSpaceCraft(pageable).stream().collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(this.service.getAllSpaceCraft(pageable).stream().collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<SpacecraftDto>> getSpacecraftByName(String name) {
-        return new ResponseEntity<>(this.mapper.fromDomainToDtoList(this.getService.getSpacecraftByName(name)),HttpStatus.OK);
+        return new ResponseEntity<>(this.mapper.fromDomainToDtoList(this.service.getSpacecraftByName(name)),HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> postSpacecraft(@RequestBody SpacecraftDto dto) {
-        this.validation.validatePostDto(dto);
-        this.getService.postSpacecraft(this.mapper.fromDtoToDomainPost(dto));
+        SpacecraftValidation.validatePostDto(dto);
+        this.service.postSpacecraft(this.mapper.fromDtoToDomainPost(dto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> deleteSpacecraft(int id) {
-        this.validation.validateId(id);
-        this.getService.deleteSpacecrat(id);
+        SpacecraftValidation.validateId(id);
+        this.service.deleteSpacecrat(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> upateSpacecraft(PatchSpacecraftDTO dto) {
-        this.validation.validatePatchDTO(dto);
-        this.getService.patchSpacecraft(this.mapper.fromDtoToDomainPatch(dto));
+        SpacecraftValidation.validatePatchDTO(dto);
+        this.service.patchSpacecraft(this.mapper.fromDtoToDomainPatch(dto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

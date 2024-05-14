@@ -11,6 +11,13 @@ public class PatchSpacecraftDTO {
     public PatchSpacecraftDTO() {
     }
 
+    public PatchSpacecraftDTO(int id, String name, String film, String description) {
+        this.id = id;
+        this.name = name;
+        this.film = film;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }

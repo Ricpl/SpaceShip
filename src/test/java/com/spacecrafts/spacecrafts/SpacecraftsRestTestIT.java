@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SpacecraftsRestTestIT {
@@ -28,12 +29,14 @@ public class SpacecraftsRestTestIT {
     final int CORRECT_ID= 1;
     final String ASSOCIATE_FILM="Star Wars";
 
+
     @Test
     void testGetByIdOK()  throws URISyntaxException {
         String baseUrl = "http://localhost:"+port+"/spacecraft/id/"+ CORRECT_ID;
         URI uri =new URI(baseUrl);
 
         ResponseEntity<SpacecraftDto> response=this.template.getForEntity(uri,SpacecraftDto.class);
+        assertNotNull(response.getBody());
         assertEquals(ASSOCIATE_FILM, response.getBody().getFilm());
     }
 
@@ -44,7 +47,7 @@ public class SpacecraftsRestTestIT {
         URI uri =new URI(baseUrl);
 
         ResponseEntity<?> response=this.template.getForEntity(uri,String.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected, response.getStatusCode());
         assertEquals(expected, response.getStatusCode());
     }
 
@@ -54,30 +57,41 @@ public class SpacecraftsRestTestIT {
                 Arguments.of(15, HttpStatus.NOT_FOUND));
     }
 
-    @Test
-    void testPostOK()throws URISyntaxException{
+
+    @ParameterizedTest
+    @MethodSource("argumentToTestPost")
+    void testPost(String description, String film, String name, HttpStatus expected)throws URISyntaxException{
         String baseUrl = "http://localhost:"+port+"/addSpacecraft";
         URI uri =new URI(baseUrl);
 
-        SpacecraftDto request= new SpacecraftDto("Descrption","Film","name");
+        SpacecraftDto request= new SpacecraftDto(description,film,name);
 
         ResponseEntity<?> response=this.template.postForEntity(uri,request,String.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected, response.getStatusCode());
+
+    }
+    static Stream<Arguments> argumentToTestPost(){
+        return Stream.of(
+                Arguments.of("Descrption","Film","name", HttpStatus.OK),
+                Arguments.of("Descrption",null,"name", HttpStatus.BAD_REQUEST),
+                Arguments.of("Descrption","","name", HttpStatus.BAD_REQUEST));
     }
 
-    @Test
-    void testPostKO()throws URISyntaxException{
-        String baseUrl = "http://localhost:"+port+"/addSpacecraft";
+    @ParameterizedTest
+    @MethodSource("argumentToTestDelete")
+    void testDelete(int id, HttpStatus expected)throws URISyntaxException{
+        String baseUrl = "http://localhost:"+port+"/deleteSpacecraft/id/"+ id;
         URI uri =new URI(baseUrl);
 
-        SpacecraftDto request= new SpacecraftDto("Descrption",null,"name");
 
-        ResponseEntity<?> response=this.template.postForEntity(uri,request,String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-        SpacecraftDto request1= new SpacecraftDto("Descrption",null,"name");
-
-        ResponseEntity<?> response1=this.template.postForEntity(uri,request1,String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response1.getStatusCode());
+        ResponseEntity<?> response=this.template.exchange(uri,HttpMethod.DELETE,new HttpEntity<>(""),String.class);
+        assertEquals(expected, response.getStatusCode());
     }
+    static Stream<Arguments> argumentToTestDelete(){
+        return Stream.of(
+                Arguments.of(1, HttpStatus.OK),
+                Arguments.of(-1, HttpStatus.BAD_REQUEST),
+                Arguments.of(15, HttpStatus.NOT_FOUND));
+    }
+
 }

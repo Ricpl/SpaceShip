@@ -9,8 +9,8 @@ public class SpacecraftValidation {
     public SpacecraftValidation() {
     }
 
-    public void validatePatchDTO(PatchSpacecraftDTO dto){
-        this.validateId(dto.getId());
+    public static void validatePatchDTO(PatchSpacecraftDTO dto){
+        validateId(dto.getId());
         if ((dto.getName() == null || dto.getName().isBlank())
                 && (dto.getFilm() ==null || dto.getFilm().isBlank())
                 && (dto.getDescription() ==null || dto.getDescription().isBlank())){
@@ -18,7 +18,7 @@ public class SpacecraftValidation {
         }
 
     }
-    public void validateId(int id){
+    public static void validateId(int id){
         if (id==0){
             throw new RestValidationException(RestErrorEnum.EMPTY_FIELD_ERROR);
         }
@@ -27,7 +27,7 @@ public class SpacecraftValidation {
         }
     }
 
-    public void validatePostDto(SpacecraftDto dto ){
+    public static void validatePostDto(SpacecraftDto dto ){
         if (dto.getName() == null || dto.getName().isEmpty()||
                 dto.getFilm() ==null || dto.getFilm().isEmpty() ||
                 dto.getDescription() ==null || dto.getDescription().isEmpty()){
