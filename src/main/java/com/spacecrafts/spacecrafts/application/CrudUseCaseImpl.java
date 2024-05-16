@@ -3,6 +3,7 @@ package com.spacecrafts.spacecrafts.application;
 import com.spacecrafts.spacecrafts.domain.application.CrudUseCase;
 import com.spacecrafts.spacecrafts.domain.Spacecraft;
 import com.spacecrafts.spacecrafts.domain.repository.SpacecraftRepository;
+import com.spacecrafts.spacecrafts.infraestructure.event.SpacecraftKafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import java.util.List;
 public class CrudUseCaseImpl implements CrudUseCase {
     @Autowired
     SpacecraftRepository repository;
+
+    @Autowired
+    private SpacecraftKafkaProducer producer;
 
     @Override
     public Page<Spacecraft> getAllSpaceCraft(Pageable pageable) {
@@ -44,5 +48,10 @@ public class CrudUseCaseImpl implements CrudUseCase {
     @Override
     public void patchSpacecraft(Spacecraft spacecraft) {
         this.repository.update(spacecraft);
+    }
+
+    @Override
+    public void patchSpacecraftByKafka(Spacecraft spacecraft) {
+        this.producer.sendMessage(spacecraft);
     }
 }

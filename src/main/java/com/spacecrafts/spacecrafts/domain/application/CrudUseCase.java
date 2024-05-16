@@ -13,5 +13,6 @@ public interface CrudUseCase {
     void postSpacecraft(Spacecraft spacecraft);
     void deleteSpacecrat(long id);
     void patchSpacecraft(Spacecraft spacecraft);
+    void patchSpacecraftByKafka(Spacecraft spacecraft);
 
 }

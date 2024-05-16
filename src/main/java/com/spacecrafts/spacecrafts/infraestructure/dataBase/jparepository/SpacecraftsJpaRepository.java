@@ -1,4 +1,4 @@
-package com.spacecrafts.spacecrafts.infraestructure.jparepository;
+package com.spacecrafts.spacecrafts.infraestructure.dataBase.jparepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;

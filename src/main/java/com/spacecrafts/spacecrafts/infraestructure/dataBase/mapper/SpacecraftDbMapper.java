@@ -1,7 +1,7 @@
-package com.spacecrafts.spacecrafts.infraestructure.mapper;
+package com.spacecrafts.spacecrafts.infraestructure.dataBase.mapper;
 
 import com.spacecrafts.spacecrafts.domain.Spacecraft;
-import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftDB;
+import com.spacecrafts.spacecrafts.infraestructure.dataBase.jparepository.SpacecraftDB;
 import org.mapstruct.Mapper;
 
 import java.util.List;

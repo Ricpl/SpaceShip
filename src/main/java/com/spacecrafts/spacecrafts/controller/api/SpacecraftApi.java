@@ -63,4 +63,12 @@ public interface SpacecraftApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @RequestMapping(
+            method = RequestMethod.PATCH,
+            value = "/updatespacecraft/kafka",
+            produces = "application/json",
+            consumes = "application/json" )
+    default ResponseEntity<?> upateSpacecraftKafka(@RequestBody(required = true) PatchSpacecraftDTO dto){
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
 }

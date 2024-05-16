@@ -27,6 +27,7 @@ public class SpacecraftController implements SpacecraftApi {
     SpacecraftDtoMapper mapper;
 
 
+
     @Override
     public ResponseEntity<SpacecraftDto> getSpacecraftById(int id) {
         SpacecraftValidation.validateId(id);
@@ -61,6 +62,13 @@ public class SpacecraftController implements SpacecraftApi {
     public ResponseEntity<?> upateSpacecraft(PatchSpacecraftDTO dto) {
         SpacecraftValidation.validatePatchDTO(dto);
         this.service.patchSpacecraft(this.mapper.fromDtoToDomainPatch(dto));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> upateSpacecraftKafka(PatchSpacecraftDTO dto) {
+        SpacecraftValidation.validatePatchDTO(dto);
+        this.service.patchSpacecraftByKafka(this.mapper.fromDtoToDomainPatch(dto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

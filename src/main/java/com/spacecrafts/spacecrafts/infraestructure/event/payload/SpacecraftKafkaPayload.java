@@ -1,29 +1,16 @@
-package com.spacecrafts.spacecrafts.infraestructure.jparepository;
+package com.spacecrafts.spacecrafts.infraestructure.event.payload;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-@Entity
-@Table(name = "spacecrafts")
-@Setter
-@Getter
-public class SpacecraftDB {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SpacecraftKafkaPayload {
+    private int id;
     private String name;
     private String film;
     private String description;
 
-    public SpacecraftDB() {
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -49,5 +36,15 @@ public class SpacecraftDB {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "SpacecraftKafkaPayload{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", film='" + film + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

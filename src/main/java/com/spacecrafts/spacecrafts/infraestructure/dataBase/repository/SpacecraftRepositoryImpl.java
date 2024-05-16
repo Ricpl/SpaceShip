@@ -1,12 +1,12 @@
-package com.spacecrafts.spacecrafts.infraestructure.repository;
+package com.spacecrafts.spacecrafts.infraestructure.dataBase.repository;
 
 import com.spacecrafts.spacecrafts.domain.Spacecraft;
 import com.spacecrafts.spacecrafts.domain.exception.repository.RepositoryErrorEnum;
 import com.spacecrafts.spacecrafts.domain.exception.repository.RespositoryException;
 import com.spacecrafts.spacecrafts.domain.repository.SpacecraftRepository;
-import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftDB;
-import com.spacecrafts.spacecrafts.infraestructure.jparepository.SpacecraftsJpaRepository;
-import com.spacecrafts.spacecrafts.infraestructure.mapper.SpacecraftDbMapper;
+import com.spacecrafts.spacecrafts.infraestructure.dataBase.jparepository.SpacecraftDB;
+import com.spacecrafts.spacecrafts.infraestructure.dataBase.jparepository.SpacecraftsJpaRepository;
+import com.spacecrafts.spacecrafts.infraestructure.dataBase.mapper.SpacecraftDbMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
